@@ -26,6 +26,7 @@ GTextField inputField;
 GButton sendButton;
 GButton connectButton;
 GButton pauseButton;
+GButton clearButton;
 
 boolean paused;
 String serialText = new String();
@@ -65,6 +66,9 @@ public void setup() {
   pauseButton = new GButton(this, 300, 15, 100, 20, "Pause");
   pauseButton.setTextBold();
   pauseButton.setEnabled(false);
+
+  clearButton = new GButton(this,  300, 80, 100, 20, "Clear");
+  clearButton.setTextBold();
 
   device_initialized = false;
 }
@@ -187,10 +191,9 @@ public void handleButtonEvents(GButton button, GEvent event) {
           ioe.printStackTrace();
         }
         device = null;
-        outputField = new GTextArea(this, 0, 100, 405, 400, G4P.SCROLLBARS_VERTICAL_ONLY);
         connectButton.setText("Connect");
         connectButton.setTextBold();
-        outputField.appendText("Disconnected.\n");
+        outputField.appendText("\n--- Disconnected.\n");
       } else {
         deviceFindFirst();
         if(device == null) {
@@ -200,14 +203,17 @@ public void handleButtonEvents(GButton button, GEvent event) {
           connectButton.setTextBold();
           pauseButton.setEnabled(true);
           sendButton.setEnabled(true);
-          outputField.appendText("Connected successfully.\n");
+          outputField.appendText("--- Connected successfully.\n");
         }
       }
     } else if (  button.equals(pauseButton) ) {
       pauseButton.setText( (paused) ? "Pause" : "Resume" );
       pauseButton.setTextBold();
       paused = !paused;
-    }   
+    } else if ( button.equals(clearButton) ) {
+      outputField = new GTextArea(this, 0, 100, 405, 400, G4P.SCROLLBARS_VERTICAL_ONLY);
+    }
+
   }
 }
 
