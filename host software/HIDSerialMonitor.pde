@@ -36,6 +36,9 @@ int PRODUCT_ID = 0x05df;
 HIDDevice device = null;
 Boolean device_initialized = false;
 
+String datestr;
+PrintWriter writer;
+
 public void setup() {
   size(405, 500);
   G4P.setGlobalColorScheme(5);  
@@ -84,6 +87,7 @@ public void draw() {
                 outputField.stext.deleteCharacters(0,loc);
       }
       outputField.appendText(result);
+      writer.print(result);
     }
   }
 }
@@ -194,6 +198,9 @@ public void handleButtonEvents(GButton button, GEvent event) {
         connectButton.setText("Connect");
         connectButton.setTextBold();
         outputField.appendText("\n--- Disconnected.\n");
+        outputField.appendText("--- LogFile: " + datestr+".log"+"\n");        
+        writer.flush();
+        writer.close();
       } else {
         deviceFindFirst();
         if(device == null) {
@@ -204,6 +211,9 @@ public void handleButtonEvents(GButton button, GEvent event) {
           pauseButton.setEnabled(true);
           sendButton.setEnabled(true);
           outputField.appendText("--- Connected successfully.\n");
+          
+          datestr = nf(year(),2)+nf(month(),2)+nf(day(),2) + "_" + nf(hour(),2)+nf(minute(),2)+nf(second(),2);
+          writer = createWriter(datestr+".log");
         }
       }
     } else if (  button.equals(pauseButton) ) {
